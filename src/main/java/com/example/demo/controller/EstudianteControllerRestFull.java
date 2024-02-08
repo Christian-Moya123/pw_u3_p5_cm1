@@ -75,7 +75,7 @@ public class EstudianteControllerRestFull {
   //consultarTodos?genero=F
   //consultarTodos?genero=F&edad=100
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<List<Estudiante>>consultarTodos(@RequestParam(required = false, defaultValue = "M", name = "genero") String genero) {
+  public ResponseEntity<List<Estudiante>> consultarTodos(@RequestParam(required = false, defaultValue = "M", name = "genero") String genero) {
       List<Estudiante> lista = this.estudianteService.consultarTodos(genero);
       
       HttpHeaders cabeceras = new HttpHeaders();
