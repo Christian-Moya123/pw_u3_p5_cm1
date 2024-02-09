@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.repository.modelo.Estudiante;
 import com.example.demo.service.IEstudianteService;
+import com.example.demo.service.IMateriaService;
+import com.example.demo.service.to.EstudianteTO;
+import com.example.demo.service.to.MateriaTO;
 
 
 
@@ -31,6 +34,9 @@ public class EstudianteControllerRestFull {
 
 	@Autowired
   private IEstudianteService estudianteService;
+	
+	@Autowired
+	  private IMateriaService materiaService;
 
 	//capaciadades
   //Get
@@ -74,7 +80,7 @@ public class EstudianteControllerRestFull {
   //REQUESTPARAM
   //consultarTodos?genero=F
   //consultarTodos?genero=F&edad=100
-  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(path = "/tmp", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<Estudiante>> consultarTodos(@RequestParam(required = false, defaultValue = "M", name = "genero") String genero) {
       List<Estudiante> lista = this.estudianteService.consultarTodos(genero);
       
@@ -83,5 +89,21 @@ public class EstudianteControllerRestFull {
       cabeceras.add("mensaje_info", "el sistema va a estar en mantenimiento el fin de semana");
       
       return new ResponseEntity<>(lista, cabeceras,242);
+  }
+  
+  //HATEOAS
+  //http://localhost:8080/API/v1.0/Matricula/estudiante/buscar
+  @GetMapping( produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<EstudianteTO>> consultarTodosHateoas() {
+      List<EstudianteTO> lista = this.estudianteService.consultarTodosTO();
+     
+      return  ResponseEntity.status(HttpStatus.OK).body(lista);
+  }
+  
+  @GetMapping(path = "/{id}/materias", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<List<MateriaTO>> consultarMateriaPorId(@PathVariable(name = "id")  Integer id){
+	  List<MateriaTO> lista = this.materiaService.buscarPorIdEstudiante(id);
+	  System.out.println(lista);
+	  return ResponseEntity.status(HttpStatus.OK).body(lista);
   }
 }

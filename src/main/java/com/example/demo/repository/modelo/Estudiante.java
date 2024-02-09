@@ -1,6 +1,9 @@
 package com.example.demo.repository.modelo;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
+import com.example.demo.service.to.MateriaTO;
 
 import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
@@ -8,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -32,6 +36,9 @@ public class Estudiante {
 	
 	@Column(name = "estu_fecha_nacimiento")
 	private LocalDateTime fechaNacimietno;
+	
+	@OneToMany(mappedBy = "estudiante")
+	private List<Materia> materias;
 
 	//set y get
 	public Integer getId() {
@@ -73,5 +80,14 @@ public class Estudiante {
 	public void setFechaNacimietno(LocalDateTime fechaNacimietno) {
 		this.fechaNacimietno = fechaNacimietno;
 	}
+
+	public List<Materia> getMaterias() {
+		return materias;
+	}
+
+	public void setMaterias(List<Materia> materias) {
+		this.materias = materias;
+	}
+	
 
 }
