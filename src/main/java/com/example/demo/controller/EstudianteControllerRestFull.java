@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -25,6 +27,10 @@ import com.example.demo.service.IMateriaService;
 import com.example.demo.service.to.EstudianteTO;
 import com.example.demo.service.to.MateriaTO;
 
+//PAQUETES PARA LINK
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 
 
 //SERVICIO -> Controller: Clase controller
@@ -40,13 +46,21 @@ public class EstudianteControllerRestFull {
 
 	//capaciadades
   //Get
-	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_XML_VALUE)
-	public ResponseEntity<Estudiante> buscar(@PathVariable(name = "id") Integer id) {
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<EstudianteTO> buscar(@PathVariable(name = "id") Integer id) {
 		
 		//240> grupo satisfactorio
 		//240 rescurso Estudiante encontrado satifactoriamente
-		Estudiante estu = this.estudianteService.buscar(id);
+		EstudianteTO estu = this.estudianteService.buscarTO(id);
 		//Contrato de la API(`. documentacion, Swagger.io)
+		
+		Link link = linkTo(methodOn(EstudianteControllerRestFull.class).consultarMateriaPorId(estu.getId())).withRel("materias");
+		
+		
+		Link link2 = linkTo(methodOn(EstudianteControllerRestFull.class).buscar(estu.getId())).withSelfRel();
+		estu.add(link);
+		estu.add(link2);
+		
 		
 		return ResponseEntity.status(HttpStatus.OK).body(estu);
 	}
@@ -96,6 +110,11 @@ public class EstudianteControllerRestFull {
   @GetMapping( produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<EstudianteTO>> consultarTodosHateoas() {
       List<EstudianteTO> lista = this.estudianteService.consultarTodosTO();
+      
+      for(EstudianteTO est: lista) {
+    	  Link link = linkTo(methodOn(EstudianteControllerRestFull.class).consultarMateriaPorId(est.getId())).withRel("materias");
+    	  est.add(link);
+      }
      
       return  ResponseEntity.status(HttpStatus.OK).body(lista);
   }

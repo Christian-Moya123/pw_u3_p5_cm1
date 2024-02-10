@@ -64,6 +64,13 @@ public class EstudianteServiceImpl implements IEstudianteService{
 		return listaFinal;
 	}
 	
+
+	@Override
+	public EstudianteTO buscarTO(Integer id) {
+		// TODO Auto-generated method stub
+		return this.convertir(this.estudainteRepo.seleccionar(id));
+	}
+	
 	private EstudianteTO convertir(Estudiante estu) {
 		EstudianteTO estuTo = new EstudianteTO();
 		estuTo.setApellido(estu.getApellido());
@@ -75,5 +82,6 @@ public class EstudianteServiceImpl implements IEstudianteService{
 				
 		
 	}
+
 
 }
