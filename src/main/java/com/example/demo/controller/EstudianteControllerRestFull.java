@@ -44,9 +44,13 @@ public class EstudianteControllerRestFull {
 	
 	@Autowired
 	  private IMateriaService materiaService;
+	
+	//////////////CRUD///////////////////////////////////////
+	
 
 	//capaciadades
-  //Get
+	//Get
+	//http://localhost:8080/API/v1.0/Matricula/estudiante/buscar
 	@GetMapping(path = "/self/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EstudianteTO> buscar(@PathVariable(name = "id") Integer id) {
 		
@@ -65,33 +69,49 @@ public class EstudianteControllerRestFull {
 		
 		return ResponseEntity.status(HttpStatus.OK).body(estu);
 	}
+	
+	
+	  @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	  public ResponseEntity<EstudianteLigeroTO> consultarEstudainteLigero(@PathVariable(name = "id")  Integer id){
+		  EstudianteLigeroTO estu = this.estudianteService.consultarEstudianteLigeroTO(id);
+		  
+		  Link link = linkTo(methodOn(EstudianteControllerRestFull.class).buscar(estu.getId())).withRel("datos");
+		  estu.add(link);
+		  
+		  return ResponseEntity.status(HttpStatus.OK).body(estu);
+	  }
+	
+	  //http://localhost:8080/API/v1.0/Matricula/estudiante/guardar
+	  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	  public ResponseEntity<String> guardar(@RequestBody Estudiante estudiante){
+		  this.estudianteService.guardar(estudiante);
+		  return ResponseEntity.status(HttpStatus.OK).body("Estudiante guaradado ");
+	  }
+	  
+	  @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	  public ResponseEntity<String> actualizar(@RequestBody Estudiante estudiante, @PathVariable(name = "id") Integer id) {
+		estudiante.setId(id);
+		  this.estudianteService.actualizar(estudiante);
+		  return ResponseEntity.status(HttpStatus.OK).body("Estudiante actualizado ");
+	  }
+	  
+	  @PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	  public ResponseEntity<String>  actualizarParcial(@RequestBody Estudiante estudiante, @PathVariable(name = "id") Integer id) {
+		  this.estudianteService.actualizarParcial(estudiante.getApellido(), estudiante.getNombre(), estudiante.getId());
+		  return ResponseEntity.status(HttpStatus.OK).body("Estudiante actualizado parcialmente");
+	  }
+	  
+	  //PATHVARIABLE
+	  @DeleteMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	  public ResponseEntity<String>  borrar(@PathVariable(name = "id") Integer id) {
+		  this.estudianteService.borrarr(id);
+		  return ResponseEntity.status(HttpStatus.OK).body("Estudiante eliminado");
+	  }
+	
+	//////////////////////////////////////////////////////
 
-  //http://localhost:8080/API/v1.0/Matricula/estudiante/buscar
 
-  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-  public void guardar(@RequestBody Estudiante estudiante){
-      this.estudianteService.guardar(estudiante);
-  }
-  //http://localhost:8080/API/v1.0/Matricula/estudiante/guardar
-  
-  @PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public void actualizar(@RequestBody Estudiante estudiante, @PathVariable(name = "id") Integer id) {
-	estudiante.setId(id);
-	  this.estudianteService.actualizar(estudiante);
-  }
-  
-  @PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public void actualizarParcial(@RequestBody Estudiante estudiante, @PathVariable(name = "id") Integer id) {
-	  this.estudianteService.actualizarParcial(estudiante.getApellido(), estudiante.getNombre(), estudiante.getId());
-  }
-  
-  //PATHVARIABLE
-  @DeleteMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-  public void borrar(@PathVariable(name = "id") Integer id) {
-	  this.estudianteService.borrarr(id);
-  }
-  
-  
+
   //REQUESTPARAM
   //consultarTodos?genero=F
   //consultarTodos?genero=F&edad=100
@@ -127,13 +147,5 @@ public class EstudianteControllerRestFull {
 	  return ResponseEntity.status(HttpStatus.OK).body(lista);
   }
   
-  @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<EstudianteLigeroTO> consultarEstudainteLigero(@PathVariable(name = "id")  Integer id){
-	  EstudianteLigeroTO estu = this.estudianteService.consultarEstudianteLigeroTO(id);
-	  
-	  Link link = linkTo(methodOn(EstudianteControllerRestFull.class).buscar(estu.getId())).withRel("datos");
-	  estu.add(link);
-	  
-	  return ResponseEntity.status(HttpStatus.OK).body(estu);
-  }
+
 }
