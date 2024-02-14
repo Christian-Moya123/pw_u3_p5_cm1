@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.repository.modelo.Estudiante;
 import com.example.demo.service.IEstudianteService;
 import com.example.demo.service.IMateriaService;
+import com.example.demo.service.to.EstudianteLigeroTO;
 import com.example.demo.service.to.EstudianteTO;
 import com.example.demo.service.to.MateriaTO;
 
@@ -46,7 +47,7 @@ public class EstudianteControllerRestFull {
 
 	//capaciadades
   //Get
-	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/self/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<EstudianteTO> buscar(@PathVariable(name = "id") Integer id) {
 		
 		//240> grupo satisfactorio
@@ -124,5 +125,15 @@ public class EstudianteControllerRestFull {
 	  List<MateriaTO> lista = this.materiaService.buscarPorIdEstudiante(id);
 	  System.out.println(lista);
 	  return ResponseEntity.status(HttpStatus.OK).body(lista);
+  }
+  
+  @GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<EstudianteLigeroTO> consultarEstudainteLigero(@PathVariable(name = "id")  Integer id){
+	  EstudianteLigeroTO estu = this.estudianteService.consultarEstudianteLigeroTO(id);
+	  
+	  Link link = linkTo(methodOn(EstudianteControllerRestFull.class).buscar(estu.getId())).withRel("datos");
+	  estu.add(link);
+	  
+	  return ResponseEntity.status(HttpStatus.OK).body(estu);
   }
 }

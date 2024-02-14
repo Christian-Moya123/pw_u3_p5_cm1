@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.repository.IEstudianteRepository;
 import com.example.demo.repository.modelo.Estudiante;
+import com.example.demo.service.to.EstudianteLigeroTO;
 import com.example.demo.service.to.EstudianteTO;
 
 @Service
@@ -71,6 +72,24 @@ public class EstudianteServiceImpl implements IEstudianteService{
 		return this.convertir(this.estudainteRepo.seleccionar(id));
 	}
 	
+	@Override
+	public EstudianteLigeroTO consultarEstudianteLigeroTO(Integer id) {
+		// TODO Auto-generated method stub
+		return this.convertirLigeroTO(this.estudainteRepo.seleccionar(id));
+	}
+
+	
+	
+	public EstudianteLigeroTO convertirLigeroTO(Estudiante est) {
+		// TODO Auto-generated method stub
+		EstudianteLigeroTO estuLigero = new EstudianteLigeroTO();
+		estuLigero.setApellido(est.getApellido());
+		estuLigero.setId(est.getId());
+		estuLigero.setNombre(est.getNombre());
+		return estuLigero;
+	}
+
+	
 	private EstudianteTO convertir(Estudiante estu) {
 		EstudianteTO estuTo = new EstudianteTO();
 		estuTo.setApellido(estu.getApellido());
@@ -78,10 +97,17 @@ public class EstudianteServiceImpl implements IEstudianteService{
 		estuTo.setGenero(estu.getGenero());
 		estuTo.setNombre(estu.getNombre());
 		estuTo.setId(estu.getId());
+		estuTo.setCarrera(estu.getCarrera());
+		estuTo.setDireccion(estu.getDireccion());
+		estuTo.setEmail(estu.getEmail());
+		estuTo.setPromedio(estu.getPromedio());
+		estuTo.setTelefono(estu.getTelefono());
 		return estuTo;
 				
 		
 	}
 
+	
+	
 
 }
