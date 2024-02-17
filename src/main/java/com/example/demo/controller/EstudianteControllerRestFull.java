@@ -104,7 +104,7 @@ public class EstudianteControllerRestFull {
 	  }
 	  
 	  //PATHVARIABLE
-	  @DeleteMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+	  @DeleteMapping(path = "/{id}")
 	  public ResponseEntity<String>  borrar(@PathVariable(name = "id") Integer id) {
 		  this.estudianteService.borrarr(id);
 		  return ResponseEntity.status(HttpStatus.OK).body("Estudiante eliminado");
