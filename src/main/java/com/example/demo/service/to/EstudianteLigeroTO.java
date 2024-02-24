@@ -1,11 +1,8 @@
 package com.example.demo.service.to;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 import org.springframework.hateoas.RepresentationModel;
-
-import jakarta.persistence.Column;
 
 public class EstudianteLigeroTO  extends RepresentationModel<EstudianteLigeroTO> implements Serializable {
 	
