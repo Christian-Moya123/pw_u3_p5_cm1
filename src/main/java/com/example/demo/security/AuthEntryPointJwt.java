@@ -28,25 +28,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Component
-public class AuthEntryPointJwt implements AuthenticationEntryPoint{
-   
-   
-    @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response,
-            AuthenticationException authException) throws IOException, ServletException {
-       
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
- 
-        final Map<String, Object> body = new HashMap<>();
-        body.put("status", HttpServletResponse.SC_FORBIDDEN);
-        body.put("error", "Unauthorized");
-        body.put("message", authException.getMessage());
-        body.put("path", request.getServletPath());
-        
- 
-        final ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(response.getOutputStream(), body);
- 
-    }
+public class AuthEntryPointJwt implements AuthenticationEntryPoint {
+	private static final Logger LOG = LoggerFactory.getLogger(AuthEntryPointJwt.class);
+	// Es lo que retorna cuando hay un error
+	@Override
+	public void commence(HttpServletRequest request, HttpServletResponse response,
+			AuthenticationException authException) throws IOException, ServletException {
+
+		LOG.error("Unauthorized Error {}", authException.getMessage());
+		LOG.error(request.getServletPath());
+
+		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+	}
+
 }

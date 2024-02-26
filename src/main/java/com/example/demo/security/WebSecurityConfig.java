@@ -10,24 +10,24 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class WebSecurityConfig {
-	
+
 	@Autowired
 	private AuthEntryPointJwt  authorizedHandler;
-	
+
 	@Bean
 	public AuthTokenFilter autenticationJwtFilter() {
 		return  new AuthTokenFilter();
 	}
-	
+
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(authorizedHandler).and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
 				//.antMatchers("/api/auth/**").permitAll().antMatchers("/api/test/**").permitAll() //No hace falta porque todos deben autenticarse
 				.anyRequest().authenticated();
- 
+
 		http.addFilterBefore(autenticationJwtFilter(), UsernamePasswordAuthenticationFilter.class);
- 
+
 		return http.build();
 	}
 }
